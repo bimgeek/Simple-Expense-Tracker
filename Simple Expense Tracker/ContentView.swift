@@ -748,7 +748,7 @@ struct AddExpenseView: View {
                 .padding(.horizontal)
                 .padding(.top)
             }
-            .navigationTitle("add".localized)
+            .navigationTitle("add_expense".localized)
             .navigationBarItems(
                 leading: Button("cancel".localized) {
                     isPresented = false
@@ -986,7 +986,7 @@ struct ExpenseDetailsView: View {
                 leading: Button("cancel".localized) {
                     isPresented = false
                 },
-                trailing: Button("add".localized) {
+                trailing: Button("add_expense".localized) {
                     if let amountDouble = Double(amount),
                        amountDouble > 0 {
                         let vatDouble = Double(vatAmount) ?? 0
