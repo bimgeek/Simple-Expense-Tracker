@@ -38,6 +38,7 @@
 "delete" = "Sil";
 "export" = "Dışa Aktar";
 "reset" = "Sıfırla";
+"done" = "Tamam";
 
 // Filters
 "category" = "Kategori";
@@ -87,5 +88,5 @@
 "receipt" = "Fiş";
 "take_photo" = "Fotoğraf Çek";
 "retake_photo" = "Yeniden Çek";
-"delete_expense_confirmation" = "Harcamayı Sil";
-"delete_expense_message" = "Harcamayı silmek istediğine emin misin? Bu işlem geri alınamaz.";
+"delete_expense" = "Harcamayı Sil";
+"delete_expense_warning" = "Bu harcamayı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.";
