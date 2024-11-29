@@ -1,0 +1,91 @@
+// General
+"system" = "Sistem";
+"english" = "İngilizce";
+"turkish" = "Türkçe";
+
+// Tabs
+"home" = "Ana Sayfa";
+"log" = "Kayıtlar";
+"insights" = "Analiz";
+"settings" = "Ayarlar";
+
+// Settings
+"language" = "Dil";
+"language_settings" = "Dil Ayarları";
+
+// Categories
+"general" = "Genel";
+"housing" = "Konut";
+"mobility" = "Ulaşım";
+"utilities" = "Faturalar";
+"entertainment" = "Eğlence";
+"groceries" = "Market";
+"eating_out" = "Dışarıda Yemek";
+"health" = "Sağlık";
+"clothing" = "Giyim";
+"insurance" = "Sigorta";
+"education" = "Eğitim";
+"kids" = "Çocuklar";
+"tech" = "Teknoloji";
+"travel" = "Seyahat";
+"taxes" = "Vergiler";
+"gifts" = "Hediyeler";
+
+// Actions
+"add" = "Ekle";
+"cancel" = "İptal";
+"save" = "Kaydet";
+"delete" = "Sil";
+"export" = "Dışa Aktar";
+"reset" = "Sıfırla";
+
+// Filters
+"category" = "Kategori";
+"search_memo" = "Not Ara";
+"missing_vat" = "KDV Eksik";
+"no_receipt" = "Fiş Yok";
+"clear_filters" = "Filtreleri Temizle";
+
+// Export
+"export_expenses" = "CSV Olarak Dışa Aktar";
+"export_images" = "Fiş Fotoğraflarını Dışa Aktar";
+
+// Reset
+"reset_all_data" = "Tüm Verileri Sıfırla";
+"reset_warning" = "Bu işlem tüm harcama verilerinizi kalıcı olarak silecektir.";
+"reset_confirm" = "Tüm verileri sıfırlamak istediğinizden emin misiniz? Bu işlem geri alınamaz.";
+"yes_reset" = "Evet, Her Şeyi Sıfırla";
+"data_reset_success" = "Veriler başarıyla sıfırlandı";
+
+// Add these new strings
+"vat" = "KDV";
+"todays_expenses" = "Bugünkü Harcamalar";
+"no_expenses_today" = "Bugün harcama yok";
+"export_description" = "Harcama verilerinizi ve fiş fotoğraflarınızı dışa aktarın.";
+"monthly_total" = "Aylık Toplam:";
+  
+// Insights
+"total" = "Toplam";
+"monthly_statistics" = "Aylık İstatistikler";
+"daily_average" = "Günlük Ortalama";
+"weekly_average" = "Haftalık Ortalama";
+"weekly_trend" = "Haftalık Trend";
+"no_expenses_in" = "Harcama yok:";
+"add_first_expense" = "İstatistikleri görmek için ilk harcamanızı ekleyin";
+"spending_heatmap" = "Harcama Haritası";
+
+// Log
+"no_expenses_found" = "Harcama bulunamadı";
+"no_matching_expenses" = "Eslesen harcama bulunamadi";
+"try_adjusting_your_filters" = "Filtreleri guncellemeyi deneyin";
+"add_your_first_expense_for" = "Bu ay icin ilk harcamanizi ekleyin: ";
+
+// Expense Details
+"vat" = "KDV";
+"memo" = "Not";
+"date" = "Tarih";
+"receipt" = "Fiş";
+"take_photo" = "Fotoğraf Çek";
+"retake_photo" = "Yeniden Çek";
+"delete_expense_confirmation" = "Harcamayı Sil";
+"delete_expense_message" = "Harcamayı silmek istediğine emin misin? Bu işlem geri alınamaz.";

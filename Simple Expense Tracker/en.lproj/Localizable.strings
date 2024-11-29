@@ -1,0 +1,91 @@
+// General
+"system" = "System";
+"english" = "English";
+"turkish" = "Turkish";
+
+// Tabs
+"home" = "Home";
+"log" = "Log";
+"insights" = "Insights";
+"settings" = "Settings";
+
+// Settings
+"language" = "Language";
+"language_settings" = "Language Settings";
+
+// Categories
+"general" = "General";
+"housing" = "Housing";
+"mobility" = "Mobility";
+"utilities" = "Utilities";
+"entertainment" = "Entertainment";
+"groceries" = "Groceries";
+"eating_out" = "Eating Out";
+"health" = "Health";
+"clothing" = "Clothing";
+"insurance" = "Insurance";
+"education" = "Education";
+"kids" = "Kids";
+"tech" = "Tech";
+"travel" = "Travel";
+"taxes" = "Taxes";
+"gifts" = "Gifts";
+
+// Actions
+"add" = "Add";
+"cancel" = "Cancel";
+"save" = "Save";
+"delete" = "Delete";
+"export" = "Export";
+"reset" = "Reset";
+
+// Filters
+"category" = "Category";
+"search_memo" = "Search Memo";
+"missing_vat" = "Missing VAT";
+"no_receipt" = "No Receipt";
+"clear_filters" = "Clear Filters";
+
+// Export
+"export_expenses" = "Export Expenses as CSV";
+"export_images" = "Export Receipt Images";
+
+// Reset
+"reset_all_data" = "Reset All Data";
+"reset_warning" = "This will permanently delete all your expenses data.";
+"reset_confirm" = "Are you sure you want to reset all data? This action cannot be undone.";
+"yes_reset" = "Yes, Reset Everything";
+"data_reset_success" = "Data successfully reset";
+
+// Add these new strings
+"vat" = "VAT";
+"todays_expenses" = "Today's Expenses";
+"no_expenses_today" = "No expenses today";
+"export_description" = "Export your expenses data and receipt images.";
+"monthly_total" = "Monthly Total:";
+  
+// Insights
+"total" = "Total";
+"monthly_statistics" = "Monthly Statistics";
+"daily_average" = "Daily Average";
+"weekly_average" = "Weekly Average";
+"weekly_trend" = "Weekly Trend";
+"no_expenses_in" = "No expenses in";
+"add_first_expense" = "Add your first expense to see insights";
+"spending_heatmap" = "Spending Heatmap";
+
+// Log
+"no_expenses_found" = "No expenses found";
+"no_matching_expenses" = "No matching expenses";
+"try_adjusting_your_filters" = "Try adjusting your filters";
+"add_your_first_expense_for" = "Add your first expense";
+
+// Expense Details
+"vat" = "VAT";
+"memo" = "Memo";
+"date" = "Date";
+"receipt" = "Receipt";
+"take_photo" = "Take Photo";
+"retake_photo" = "Retake Photo";
+"delete_expense_confirmation" = "Delete Expense";
+"delete_expense_message" = "Are you sure you want to delete this expense? This action cannot be undone.";
