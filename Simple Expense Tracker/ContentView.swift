@@ -524,7 +524,7 @@ struct HomeView: View {
                                 .fill(categoryColor(for: item.category))
                                 .frame(width: 8, height: 8)
                             // Update this line to use localized category name
-                            Text(item.category.rawValue.lowercased().localized)
+                            Text(item.category.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized)
                                 .font(.caption)
                                 .foregroundColor(.gray)
                             Text("\(Int((item.amount / expenseManager.currentMonthExpenses) * 100))%")
@@ -660,7 +660,7 @@ struct ExpenseRow: View {
                 
                 // Expense Details
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(expense.memo.isEmpty ? expense.category.rawValue.lowercased().localized : expense.memo)
+                    Text(expense.memo.isEmpty ? expense.category.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized : expense.memo)
                         .foregroundColor(.white)
                         .font(.system(size: 16, weight: .medium))
                     
@@ -738,7 +738,7 @@ struct AddExpenseView: View {
                                         .foregroundColor(.white)
                                 }
                                 
-                                Text(category.rawValue.lowercased().localized)
+                                Text(category.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized)
                                     .font(.system(size: 14))
                                     .foregroundColor(.gray)
                             }
@@ -857,7 +857,7 @@ struct ExpenseDetailsView: View {
                     // Category Chip
                     HStack(spacing: 8) {
                         Image(systemName: category.icon)
-                        Text(category.rawValue.lowercased().localized)
+                        Text(category.localizedName)  // Change this line
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
@@ -1468,7 +1468,7 @@ struct CategoryLegendView: View {
                         .fill(categoryColor(item.category))
                         .frame(width: 12, height: 12)
                     
-                    Text(item.category.rawValue.lowercased().localized)
+                    Text(item.category.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized)
                         .foregroundColor(.white)
                     
                     Spacer()
@@ -2229,7 +2229,7 @@ struct ExpenseDetailsEditView: View {
                     // Category Chip
                     HStack(spacing: 8) {
                         Image(systemName: expense.category.icon)
-                        Text(expense.category.rawValue)
+                        Text(expense.category.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
@@ -2637,7 +2637,7 @@ struct FilterBar: View {
                         }) {
                             HStack {
                                 Image(systemName: category.icon)
-                                Text(category.rawValue)
+                                Text(category.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized)
                                 if filterOptions.selectedCategories.contains(category) {
                                     Spacer()
                                     Image(systemName: "checkmark")
