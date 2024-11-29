@@ -1779,61 +1779,64 @@ struct WeeklyExpenseChartView: View {
             VStack(alignment: .leading, spacing: 8) {
                 // Line Chart
                 GeometryReader { geometry in
-                    Path { path in
-                        guard !weeklyData.isEmpty else { return }
+                    ZStack(alignment: .bottom) {
+                        // Draw the line chart
+                        Path { path in
+                            guard !weeklyData.isEmpty else { return }
+                            
+                            let width = geometry.size.width / CGFloat(weeklyData.count - 1)
+                            let height = geometry.size.height - 40 // Leave space for labels
+                            
+                            var startPoint = true
+                            
+                            for data in weeklyData {
+                                let x = CGFloat(data.weekNumber - 1) * width
+                                let y = height - (height * (data.amount / maxAmount))
+                                
+                                if startPoint {
+                                    path.move(to: CGPoint(x: x, y: y))
+                                    startPoint = false
+                                } else {
+                                    path.addLine(to: CGPoint(x: x, y: y))
+                                }
+                            }
+                        }
+                        .stroke(Color.cyan, lineWidth: 2)
                         
-                        let width = geometry.size.width / CGFloat(weeklyData.count - 1)
-                        let height = geometry.size.height - 40 // Leave space for labels
-                        
-                        var startPoint = true
-                        
-                        for data in weeklyData {
+                        // Draw amount labels and dots
+                        ForEach(weeklyData) { data in
+                            let width = geometry.size.width / CGFloat(weeklyData.count - 1)
+                            let height = geometry.size.height - 40
                             let x = CGFloat(data.weekNumber - 1) * width
                             let y = height - (height * (data.amount / maxAmount))
                             
-                            if startPoint {
-                                path.move(to: CGPoint(x: x, y: y))
-                                startPoint = false
-                            } else {
-                                path.addLine(to: CGPoint(x: x, y: y))
-                            }
+                            // Data point dot
+                            Circle()
+                                .fill(Color.cyan)
+                                .frame(width: 8, height: 8)
+                                .position(x: x, y: y)
+                            
+                            // Amount label
+                            Text("₺\(data.amount, specifier: "%.0f")")
+                                .font(.system(size: 12, weight: .medium)) // Increased size and added weight
+                                .foregroundColor(.white) // Changed to white for better contrast
+                                .background(Color.black.opacity(0.7))
+                                .padding(.horizontal, 6) // Increased horizontal padding
+                                .padding(.vertical, 3) // Increased vertical padding
+                                .cornerRadius(4)
+                                .position(x: x, y: max(25, y - 25)) // Adjusted spacing to accommodate larger text
+                            
+                            // Date label
+                            Text(dateFormatter.string(from: data.weekStart))
+                                .font(.system(size: 10))
+                                .foregroundColor(.gray)
+                                .position(x: x, y: height + 20)
                         }
                     }
-                    .stroke(Color.cyan, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
-                    
-                    // Data points and labels
-                    ForEach(weeklyData) { data in
-                        let width = geometry.size.width / CGFloat(weeklyData.count - 1)
-                        let height = geometry.size.height - 40
-                        let x = CGFloat(data.weekNumber - 1) * width
-                        let y = height - (height * (data.amount / maxAmount))
-                        
-                        // Data point
-                        Circle()
-                            .fill(Color.cyan)
-                            .frame(width: 8, height: 8)
-                            .position(x: x, y: y)
-                            .overlay(
-                                // Amount label
-                                Text("₺\(data.amount, specifier: "%.0f")")
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.gray)
-                                    .offset(y: -20)
-                            )
-                        
-                        // Week label
-                        Text(dateFormatter.string(from: data.weekStart))
-                            .font(.system(size: 10))
-                            .foregroundColor(.gray)
-                            .position(x: x, y: height + 20)
-                    }
                 }
+                .frame(height: 200)
+                .padding(.horizontal)
             }
-            .frame(height: 200)
-            .padding(.horizontal)
-            .background(Color.black.opacity(0.3))
-            .cornerRadius(12)
-            .padding(.horizontal)
         }
         .padding(.vertical)
     }
