@@ -2218,6 +2218,8 @@ struct ExpenseDetailsEditView: View {
         return formatter.string(from: selectedDateOption.date)
     }
     
+    
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -2357,22 +2359,23 @@ struct ExpenseDetailsEditView: View {
                 }
             }
             .navigationBarItems(
-                leading: Button("cancel".localized) {
-                    isPresented = false
-                },
-                trailing: HStack(spacing: 16) {
-                    Menu {
-                        Button(role: .destructive) {
-                            showingDeleteAlert = true
-                        } label: {
-                            Label("Delete", systemImage: "trash")
+                leading: Button("delete".localized) {
+                                showingDeleteAlert = true  // Show alert instead of deleting immediately
+                            }
+                            .foregroundColor(.red),
+                trailing: Button("done".localized) {
+                                isPresented = false
+                            }
+                        )
+                        .alert("delete_expense".localized, isPresented: $showingDeleteAlert) {
+                            Button("cancel".localized, role: .cancel) { }
+                            Button("delete".localized, role: .destructive) {
+                                expenseManager.deleteExpense(expense)
+                                isPresented = false
+                            }
+                        } message: {
+                            Text("delete_expense_warning".localized)
                         }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .foregroundColor(.gray)
-                    }
-                }
-            )
             .sheet(isPresented: $showingDatePicker) {
                 NavigationView {
                     DatePicker("", selection: Binding(

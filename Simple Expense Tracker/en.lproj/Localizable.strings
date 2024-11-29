@@ -38,6 +38,7 @@
 "delete" = "Delete";
 "export" = "Export";
 "reset" = "Reset";
+"done" = "Done";
 
 // Filters
 "category" = "Category";
@@ -87,5 +88,5 @@
 "receipt" = "Receipt";
 "take_photo" = "Take Photo";
 "retake_photo" = "Retake Photo";
-"delete_expense_confirmation" = "Delete Expense";
-"delete_expense_message" = "Are you sure you want to delete this expense? This action cannot be undone.";
+"delete_expense" = "Delete Expense";
+"delete_expense_warning" = "Are you sure you want to delete this expense? This action cannot be undone.";
