@@ -32,7 +32,7 @@
 "gifts" = "Gifts";
 
 // Actions
-"add" = "Add";
+"add_expense" = "Add Expense";
 "cancel" = "Cancel";
 "save" = "Save";
 "delete" = "Delete";

@@ -32,7 +32,7 @@
 "gifts" = "Hediyeler";
 
 // Actions
-"add" = "Ekle";
+"add_expense" = "Harcama Ekle";
 "cancel" = "İptal";
 "save" = "Kaydet";
 "delete" = "Sil";
