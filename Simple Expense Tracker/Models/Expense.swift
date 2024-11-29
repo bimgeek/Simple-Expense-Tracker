@@ -58,4 +58,8 @@ enum ExpenseCategory: String, Codable, CaseIterable {
         case .gifts: return "gift"
         }
     }
+    
+    var localizedName: String {
+        return self.rawValue.lowercased().replacingOccurrences(of: " ", with: "_").localized
+    }
 } 
