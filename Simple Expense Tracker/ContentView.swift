@@ -2136,7 +2136,8 @@ struct PieChartView: View {
     private var displayContent: (title: String, amount: Double) {
         if let selected = selectedCategory,
            let category = categories.first(where: { $0.category == selected }) {
-            return (category.category.rawValue, category.amount)
+            // Update this line to use localizedName
+            return (category.category.localizedName, category.amount)
         }
         return ("total".localized, total)
     }
