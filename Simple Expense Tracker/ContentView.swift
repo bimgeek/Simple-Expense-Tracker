@@ -838,7 +838,7 @@ struct ExpenseDetailsView: View {
         return sanitized
     }
     
-    var memoSuggestions: [String] {
+    private var memoSuggestions: [String] {
         guard !memo.isEmpty else { return [] }
         return expenseManager.previousMemos(for: category, startingWith: memo)
     }
@@ -906,18 +906,31 @@ struct ExpenseDetailsView: View {
                             .focused($isVATFocused)
                         
                         // Memo Input
-                        TextField("memo".localized, text: $memo)
-                            .multilineTextAlignment(.center)
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(10)
-                            .padding(.horizontal)
-                            .focused($isMemoFocused)
-                            .onChange(of: memo) { oldValue, newValue in
-                                showMemoSuggestions = !newValue.isEmpty
+                        VStack(alignment: .leading, spacing: 8) {
+                            TextField("memo".localized, text: $memo)
+                                .multilineTextAlignment(.center)
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                                .focused($isMemoFocused)
+                                .onChange(of: memo) { _, newValue in
+                                    showMemoSuggestions = !newValue.isEmpty
+                                }
+                            
+                            // Add MemoSuggestionView if there are suggestions
+                            if showMemoSuggestions && !memoSuggestions.isEmpty {
+                                MemoSuggestionView(
+                                    suggestions: memoSuggestions,
+                                    onSelect: { selectedMemo in
+                                        memo = selectedMemo
+                                        showMemoSuggestions = false
+                                    }
+                                )
                             }
+                        }
                         
                         // Date Selection
                         HStack {
@@ -2218,7 +2231,10 @@ struct ExpenseDetailsEditView: View {
         return formatter.string(from: selectedDateOption.date)
     }
     
-    
+    private var memoSuggestions: [String] {
+        guard !memo.isEmpty else { return [] }
+        return expenseManager.previousMemos(for: category, startingWith: memo)
+    }
     
     var body: some View {
         NavigationView {
@@ -2282,18 +2298,31 @@ struct ExpenseDetailsEditView: View {
                             .focused($isVATFocused)
                         
                         // Memo Input
-                        TextField("memo".localized, text: $memo)
-                            .multilineTextAlignment(.center)
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(10)
-                            .padding(.horizontal)
-                            .focused($isMemoFocused)
-                            .onChange(of: memo) { oldValue, newValue in
-                                showMemoSuggestions = !newValue.isEmpty
+                        VStack(alignment: .leading, spacing: 8) {
+                            TextField("memo".localized, text: $memo)
+                                .multilineTextAlignment(.center)
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                                .focused($isMemoFocused)
+                                .onChange(of: memo) { _, newValue in
+                                    showMemoSuggestions = !newValue.isEmpty
+                                }
+                            
+                            // Add MemoSuggestionView if there are suggestions
+                            if showMemoSuggestions && !memoSuggestions.isEmpty {
+                                MemoSuggestionView(
+                                    suggestions: memoSuggestions,
+                                    onSelect: { selectedMemo in
+                                        memo = selectedMemo
+                                        showMemoSuggestions = false
+                                    }
+                                )
                             }
+                        }
                         
                         // Date Selection
                         HStack {

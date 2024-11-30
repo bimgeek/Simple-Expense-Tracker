@@ -105,7 +105,7 @@ class ExpenseManager: ObservableObject {
         
         // Filter by prefix if provided and sort alphabetically
         return Array(memos)
-            .filter { prefix.isEmpty || $0.lowercased().hasPrefix(prefix.lowercased()) }
+            .filter { prefix.isEmpty || $0.localizedCaseInsensitiveContains(prefix) }
             .sorted()
     }
 } 
