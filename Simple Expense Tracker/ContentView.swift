@@ -1574,44 +1574,55 @@ struct ExpenseHeatmapView: View {
     let expenses: [Expense]
     let currentDate: Date
     
-    private var calendar: Calendar {
-        Calendar.current
-    }
-    
     private var daysInMonth: Int {
-        calendar.range(of: .day, in: .month, for: currentDate)?.count ?? 0
-    }
-    
-    private var firstDayWeekday: Int {
-        let components = calendar.dateComponents([.year, .month], from: currentDate)
-        guard let firstDay = calendar.date(from: components) else { return 0 }
-        return calendar.component(.weekday, from: firstDay) - 1 // 0 is Sunday
-    }
-    
-    private var dailyExpenses: [(date: Date, amount: Double)] {
-        var result: [(Date, Double)] = []
-        
-        // Create date components for the start of the month
-        var components = calendar.dateComponents([.year, .month], from: currentDate)
-        
-        // Get daily totals
-        for day in 1...daysInMonth {
-            components.day = day
-            guard let date = calendar.date(from: components) else { continue }
-            
-            let dayExpenses = expenses.filter { expense in
-                calendar.isDate(expense.date, inSameDayAs: date)
-            }
-            
-            let total = dayExpenses.reduce(0) { $0 + $1.amount }
-            result.append((date, total))
+        let calendar = Calendar.current
+        if let range = calendar.range(of: .day, in: .month, for: currentDate) {
+            return range.count
         }
-        
-        return result
+        return 0
     }
     
-    private var maxDailyAmount: Double {
-        dailyExpenses.map { $0.amount }.max() ?? 0
+    private var firstDayOfMonth: Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: currentDate)
+        return calendar.date(from: components) ?? currentDate
+    }
+    
+    private var firstWeekday: Int {
+        let calendar = Calendar.current
+        return calendar.component(.weekday, from: firstDayOfMonth)
+    }
+    
+    private var weeksInMonth: Int {
+        let firstDayWeekday = firstWeekday
+        return Int(ceil((Double(firstDayWeekday - 1 + daysInMonth)) / 7.0))
+    }
+    
+    private func dayForCell(week: Int, weekday: Int) -> Int? {
+        // weekday parameter is 0-6 (Sunday-Saturday)
+        // firstWeekday is 1-7 (Sunday-Saturday)
+        let adjustedWeekday = weekday + 1  // Convert to 1-based weekday
+        let day = (week * 7) + adjustedWeekday - firstWeekday + 1
+        
+        if day > 0 && day <= daysInMonth {
+            return day
+        }
+        return nil
+    }
+    
+    private func expenseForDay(_ day: Int) -> Double {
+        let calendar = Calendar.current
+        let dayStart = calendar.date(byAdding: .day, value: day - 1, to: firstDayOfMonth) ?? Date()
+        
+        return expenses.filter { expense in
+            calendar.isDate(expense.date, inSameDayAs: dayStart)
+        }.reduce(0) { $0 + $1.amount }
+    }
+    
+    private func cellColor(_ amount: Double) -> Color {
+        let maxAmount = expenses.map { $0.amount }.max() ?? 0
+        let normalizedAmount = maxAmount > 0 ? amount / maxAmount : 0
+        return Color.red.opacity(normalizedAmount * 0.8 + 0.1)
     }
     
     var body: some View {
@@ -1621,21 +1632,24 @@ struct ExpenseHeatmapView: View {
                 .foregroundColor(.gray)
                 .padding(.horizontal)
             
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 7), spacing: 4) {
-                // Empty cells for first week alignment
-                ForEach(0..<firstDayWeekday, id: \.self) { _ in
-                    Rectangle()
-                        .fill(Color.clear)
-                        .frame(height: 30)
-                }
-                
-                // Day cells
-                ForEach(dailyExpenses, id: \.date) { day in
-                    DayHeatmapCell(
-                        date: day.date,
-                        amount: day.amount,
-                        maxAmount: maxDailyAmount
-                    )
+            VStack(spacing: 4) {
+                ForEach(0..<weeksInMonth, id: \.self) { week in
+                    HStack(spacing: 4) {
+                        ForEach(0..<7, id: \.self) { weekday in
+                            if let day = dayForCell(week: week, weekday: weekday) {
+                                let amount = expenseForDay(day)
+                                HeatmapCell(
+                                    day: day,
+                                    amount: amount,
+                                    maxAmount: expenses.map { $0.amount }.max() ?? 0
+                                )
+                            } else {
+                                Rectangle()
+                                    .fill(Color.clear)
+                                    .aspectRatio(1, contentMode: .fit)
+                            }
+                        }
+                    }
                 }
             }
             .padding(.horizontal)
@@ -2910,6 +2924,64 @@ struct MemoSearchView: View {
             .map { $0.memo }
             .filter { !$0.isEmpty }
         )).prefix(10).sorted()
+    }
+}
+
+// First, add this helper view for the tooltip
+struct AmountTooltip: View {
+    let amount: Double
+    
+    var body: some View {
+        Text("₺\(amount, specifier: "%.2f")")
+            .font(.system(size: 12))
+            .foregroundColor(.white)
+            .lineLimit(1)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .frame(minWidth: 80) // Set a minimum width for the tooltip
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.black.opacity(0.8))
+            )
+    }
+}
+
+// Then update the cell implementation in ExpenseHeatmapView
+struct HeatmapCell: View {
+    let day: Int
+    let amount: Double
+    let maxAmount: Double
+    @State private var isShowingTooltip = false
+    
+    private var normalizedAmount: Double {
+        maxAmount > 0 ? amount / maxAmount : 0
+    }
+    
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.red.opacity(normalizedAmount * 0.8 + 0.1))
+                .aspectRatio(1, contentMode: .fit)
+                .cornerRadius(4)
+            
+            Text("\(day)")
+                .font(.system(size: 10))
+                .foregroundColor(.white)
+                .opacity(0.5)
+            
+            if isShowingTooltip && amount > 0 {
+                AmountTooltip(amount: amount)
+                    .offset(y: -25)
+                    .transition(.opacity)
+                    .zIndex(1)
+                    .fixedSize(horizontal: true, vertical: false) // Allow horizontal expansion
+            }
+        }
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isShowingTooltip.toggle()
+            }
+        }
     }
 }
 
