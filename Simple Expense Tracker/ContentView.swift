@@ -2389,22 +2389,40 @@ struct ExpenseDetailsEditView: View {
             }
             .navigationBarItems(
                 leading: Button("delete".localized) {
-                                showingDeleteAlert = true  // Show alert instead of deleting immediately
-                            }
-                            .foregroundColor(.red),
+                    showingDeleteAlert = true
+                }
+                .foregroundColor(.red),
                 trailing: Button("done".localized) {
-                                isPresented = false
-                            }
-                        )
-                        .alert("delete_expense".localized, isPresented: $showingDeleteAlert) {
-                            Button("cancel".localized, role: .cancel) { }
-                            Button("delete".localized, role: .destructive) {
-                                expenseManager.deleteExpense(expense)
-                                isPresented = false
-                            }
-                        } message: {
-                            Text("delete_expense_warning".localized)
+                    // Add this code to save changes
+                    if let amountDouble = Double(amount),
+                       let vatDouble = Double(vatAmount) {
+                        // Save image if exists
+                        var imagePath = expense.receiptImagePath
+                        if let image = receiptImage {
+                            imagePath = ImageManager.shared.saveImage(image, forExpense: expense.id)
                         }
+                        
+                        expenseManager.updateExpense(
+                            expense,
+                            newAmount: amountDouble,
+                            newVat: vatDouble,
+                            newMemo: memo,
+                            newDate: selectedDateOption.date,
+                            receiptImagePath: imagePath
+                        )
+                    }
+                    isPresented = false
+                }
+            )
+            .alert("delete_expense".localized, isPresented: $showingDeleteAlert) {
+                Button("cancel".localized, role: .cancel) { }
+                Button("delete".localized, role: .destructive) {
+                    expenseManager.deleteExpense(expense)
+                    isPresented = false
+                }
+            } message: {
+                Text("delete_expense_warning".localized)
+            }
             .sheet(isPresented: $showingDatePicker) {
                 NavigationView {
                     DatePicker("", selection: Binding(
@@ -2439,13 +2457,9 @@ struct ExpenseDetailsEditView: View {
                     .edgesIgnoringSafeArea(.all)
                 }
             }
-            .onChange(of: shouldDeleteImage) { oldValue, newValue in
-                if newValue {
+            .onChange(of: shouldDeleteImage) { _, shouldDelete in
+                if shouldDelete {
                     receiptImage = nil
-                    if let oldPath = expense.receiptImagePath {
-                        ImageManager.shared.deleteImage(filename: oldPath)
-                    }
-                    shouldDeleteImage = false
                 }
             }
             .onAppear {
