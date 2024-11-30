@@ -2610,36 +2610,61 @@ struct ExportImagesView: View {
         let zipURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dirName).zip")
         
         do {
+            // Remove existing directory and zip file if they exist
+            try? FileManager.default.removeItem(at: tempDir)
+            try? FileManager.default.removeItem(at: zipURL)
+            
             // Create temp directory
             try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+            
+            var hasFiles = false
             
             // Copy and rename images
             for expense in monthExpenses {
                 if let imagePath = expense.receiptImagePath {
                     let sourcePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(imagePath)
                     
+                    // Check if source file exists
+                    guard FileManager.default.fileExists(atPath: sourcePath.path) else {
+                        print("Image file not found: \(sourcePath.path)")
+                        continue
+                    }
+                    
                     // Create formatted date string
-                    formatter.dateFormat = "yyyy-MM-dd_HH-mm"
+                    formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
                     let dateStr = formatter.string(from: expense.date)
                     
-                    // Create new filename
-                    let newFileName = "\(expense.category.rawValue)_\(dateStr)_receipt.jpg"
+                    // Create new filename with unique identifier
+                    let uniqueID = UUID().uuidString.prefix(8)
+                    let newFileName = "\(expense.category.rawValue)_\(dateStr)_\(uniqueID)_receipt.jpg"
                     let destinationURL = tempDir.appendingPathComponent(newFileName)
                     
                     // Copy the already-compressed image
                     try FileManager.default.copyItem(at: sourcePath, to: destinationURL)
+                    hasFiles = true
                 }
             }
             
-            // Create zip file
-            try ZipManager.createZip(at: tempDir, to: zipURL)
+            // Only create zip if we have files to include
+            if hasFiles {
+                // Create zip file
+                try ZipManager.createZip(at: tempDir, to: zipURL)
+                
+                // Clean up temp directory
+                try FileManager.default.removeItem(at: tempDir)
+                
+                return zipURL
+            } else {
+                // Clean up temp directory
+                try? FileManager.default.removeItem(at: tempDir)
+                print("No valid image files found to zip")
+                return nil
+            }
             
-            // Clean up temp directory
-            try FileManager.default.removeItem(at: tempDir)
-            
-            return zipURL
         } catch {
             print("Error creating zip file: \(error)")
+            // Clean up temp directory in case of error
+            try? FileManager.default.removeItem(at: tempDir)
             return nil
         }
     }
