@@ -90,3 +90,11 @@
 "retake_photo" = "Retake Photo";
 "delete_expense" = "Delete Expense";
 "delete_expense_warning" = "Are you sure you want to delete this expense? This action cannot be undone.";
+
+// Currency
+"currency" = "Currency";
+"currency_settings" = "Currency Settings";
+"usd" = "US Dollar";
+"eur" = "Euro";
+"gbp" = "Pound Sterling";
+"trl" = "Turkish Lira";

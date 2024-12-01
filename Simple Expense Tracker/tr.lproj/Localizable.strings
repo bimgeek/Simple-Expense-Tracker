@@ -90,3 +90,11 @@
 "retake_photo" = "Yeniden Çek";
 "delete_expense" = "Harcamayı Sil";
 "delete_expense_warning" = "Bu harcamayı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.";
+
+// Currency
+"currency" = "Para Birimi";
+"currency_settings" = "Para Birimi Ayarları";
+"usd" = "Amerikan Doları";
+"eur" = "Euro";
+"gbp" = "İngiliz Sterlini";
+"trl" = "Türk Lirası";
