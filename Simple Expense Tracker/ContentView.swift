@@ -146,6 +146,9 @@ struct MonthSelectorView: View {
     let onPrevious: () -> Void
     let onNext: () -> Void
     
+    @StateObject private var currencyManager = CurrencyManager.shared
+
+    
     var body: some View {
         HStack {
             Button(action: onPrevious) {
@@ -178,6 +181,8 @@ struct DayExpensesView: View {
     let expenses: [Expense]
     let dayTotal: Double
     @ObservedObject var expenseManager: ExpenseManager
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
+
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -186,7 +191,7 @@ struct DayExpensesView: View {
                     .font(.headline)
                     .foregroundColor(.gray)
                 Spacer()
-                Text("₺\(dayTotal, specifier: "%.2f")")
+                Text("\(currencyManager.currentCurrency.symbol)\(dayTotal, specifier: "%.2f")")
                     .font(.headline)
                     .foregroundColor(.gray)
             }
@@ -203,6 +208,9 @@ struct DayExpensesView: View {
 struct MonthlyTotalView: View {
     let total: Double
     
+    @StateObject private var currencyManager = CurrencyManager.shared
+
+    
     var body: some View {
         VStack(spacing: 0) {
             Divider()
@@ -213,7 +221,7 @@ struct MonthlyTotalView: View {
                     .font(.headline)
                     .foregroundColor(.gray)
                 Spacer()
-                Text("₺\(total, specifier: "%.2f")")
+                Text("\(currencyManager.currentCurrency.symbol)\(total, specifier: "%.2f")")
                     .font(.headline)
                     .foregroundColor(.cyan)
             }
@@ -435,6 +443,7 @@ struct LogView: View {
 struct HomeView: View {
     @ObservedObject var expenseManager: ExpenseManager
     @Binding var selectedTab: TabSelection
+    @StateObject private var currencyManager = CurrencyManager.shared
     
     private var currentMonthYear: String {
         let formatter = DateFormatter()
@@ -478,7 +487,7 @@ struct HomeView: View {
                     .foregroundColor(Color.cyan.opacity(0.8))
                     .font(.title3)
                 
-                Text("₺\(expenseManager.currentMonthExpenses, specifier: "%.2f")")
+                Text("\(currencyManager.currentCurrency.symbol)\(expenseManager.currentMonthExpenses, specifier: "%.2f")")
                     .foregroundColor(.cyan)
                     .font(.system(size: 48, weight: .medium))
                 
@@ -486,7 +495,7 @@ struct HomeView: View {
                 HStack {
                     Text("vat".localized + ":")
                         .foregroundColor(.gray)
-                    Text("₺\(expenseManager.currentMonthVAT, specifier: "%.2f")")
+                    Text("\(currencyManager.currentCurrency.symbol)\(expenseManager.currentMonthVAT, specifier: "%.2f")")
                         .foregroundColor(.cyan.opacity(0.8))
                 }
                 .font(.system(size: 16))
@@ -560,7 +569,7 @@ struct HomeView: View {
                     Spacer()
                     
                     // Add daily total here
-                    Text("₺\(dailyTotal, specifier: "%.2f")")
+                    Text("\(currencyManager.currentCurrency.symbol)\(dailyTotal, specifier: "%.2f")")
                         .foregroundColor(.gray)
                         .font(.subheadline)
                 }
@@ -627,6 +636,7 @@ struct TabBarItem: View {
 struct ExpenseRow: View {
     let expense: Expense
     @ObservedObject var expenseManager: ExpenseManager
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
     @State private var showingExpenseDetails = false
     @State private var showingDeleteConfirmation = false  // Add this
     
@@ -672,7 +682,7 @@ struct ExpenseRow: View {
                 Spacer()
                 
                 // Amount
-                Text("-₺\(expense.amount, specifier: "%.2f")")
+                Text("-\(currencyManager.currentCurrency.symbol)\(expense.amount, specifier: "%.2f")")
                     .foregroundColor(.gray)
                     .font(.system(size: 16, weight: .semibold))
             }
@@ -810,6 +820,7 @@ struct ExpenseDetailsView: View {
     let category: ExpenseCategory
     @ObservedObject var expenseManager: ExpenseManager
     @Binding var isPresented: Bool
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
     
     @State private var amount: String = ""
     @State private var memo: String = ""
@@ -870,9 +881,8 @@ struct ExpenseDetailsView: View {
                     VStack(spacing: 16) {
                         ZStack {
                             HStack(spacing: 4) {
-                                Text("₺")
+                                Text(currencyManager.currentCurrency.symbol)
                                     .font(.system(size: 72, weight: .regular))
-                                    .foregroundColor(.white)
                                 TextField("0", text: Binding(
                                     get: { amount },
                                     set: { amount = formatNumberString($0) }
@@ -1094,6 +1104,7 @@ struct ExpenseDetailsView: View {
 struct SettingsView: View {
     @ObservedObject var expenseManager: ExpenseManager
     @StateObject private var languageManager = LanguageManager.shared
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
     @State private var showingResetAlert = false
     @State private var showingConfirmationAlert = false
     @State private var showingSuccessMessage = false
@@ -1144,10 +1155,47 @@ struct SettingsView: View {
                         .padding(.horizontal)
                     }
                     
+                    // Currency settings group (add this section)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("currency".localized)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        
+                        Menu {
+                            ForEach(Currency.allCases, id: \.self) { currency in
+                                Button(action: {
+                                    currencyManager.currentCurrency = currency
+                                }) {
+                                    HStack {
+                                        Text(currency.localizedName)
+                                        if currencyManager.currentCurrency == currency {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "dollarsign.circle")
+                                Text(currencyManager.currentCurrency.localizedName)
+                                Spacer()
+                                Image(systemName: "chevron.down")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.gray)
+                            }
+                            .foregroundColor(.cyan)
+                            .padding()
+                            .background(Color(red: 0.1, green: 0.1, blue: 0.3))
+                            .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                    }
+
                     Divider()
                         .background(Color.gray.opacity(0.3))
                         .padding(.vertical)
-                    
+
                     // Export options group
                     VStack(alignment: .leading, spacing: 8) {
                         Text("export_description".localized)
@@ -1542,6 +1590,8 @@ struct DayHeatmapCell: View {
     let amount: Double
     let maxAmount: Double
     @State private var isShowingAmount = false
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
+
     
     private var opacity: Double {
         guard amount > 0 else { return 0.1 }
@@ -1554,7 +1604,7 @@ struct DayHeatmapCell: View {
             .frame(height: 30)
             .cornerRadius(6)
             .overlay(
-                isShowingAmount ? Text("₺\(amount, specifier: "%.0f")")
+                isShowingAmount ? Text("\(currencyManager.currentCurrency.symbol)\(amount, specifier: "%.0f")")
                     .font(.system(size: 10))
                     .foregroundColor(.white)
                     .padding(2)
@@ -1663,6 +1713,8 @@ struct StatisticCardView: View {
     let title: String
     let amount: Double
     let icon: String
+    @StateObject private var currencyManager = CurrencyManager.shared
+
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -1674,7 +1726,7 @@ struct StatisticCardView: View {
             }
             .font(.system(size: 14))
             
-            Text("₺\(amount, specifier: "%.2f")")
+            Text("\(currencyManager.currentCurrency.symbol)\(amount, specifier: "%.2f")")
                 .font(.system(size: 20, weight: .medium))
                 .foregroundColor(.white)
         }
@@ -1746,6 +1798,8 @@ struct MonthlyStatisticsView: View {
 struct WeeklyExpenseChartView: View {
     let expenses: [Expense]
     let currentDate: Date
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
+
     
     private var calendar: Calendar {
         Calendar.current
@@ -1844,7 +1898,7 @@ struct WeeklyExpenseChartView: View {
                                 .position(x: x, y: y)
                             
                             // Amount label
-                            Text("₺\(data.amount, specifier: "%.0f")")
+                            Text("\(currencyManager.currentCurrency.symbol)\(data.amount, specifier: "%.0f")")
                                 .font(.system(size: 12, weight: .medium)) // Increased size and added weight
                                 .foregroundColor(.white) // Changed to white for better contrast
                                 .background(Color.black.opacity(0.7))
@@ -2124,6 +2178,8 @@ struct PieChartView: View {
     let categoryColor: (ExpenseCategory) -> Color
     
     @State private var selectedCategory: ExpenseCategory?
+    @StateObject private var currencyManager = CurrencyManager.shared
+
     
     private var total: Double {
         categories.reduce(0) { $0 + $1.amount }
@@ -2181,7 +2237,7 @@ struct PieChartView: View {
                     .font(.system(size: 20, weight: .medium))
                     .foregroundColor(.white)
                 
-                Text("-₺\(displayContent.amount, specifier: "%.2f")")
+                Text("-\(currencyManager.currentCurrency.symbol)\(displayContent.amount, specifier: "%.2f")")
                     .font(.system(size: 16))
                     .foregroundColor(.gray)
             }
@@ -2199,6 +2255,7 @@ struct ExpenseDetailsEditView: View {
     let expense: Expense
     @ObservedObject var expenseManager: ExpenseManager
     @Binding var isPresented: Bool
+    @StateObject private var currencyManager = CurrencyManager.shared  // Add this line
     
     @State private var amount: String = ""
     @State private var memo: String = ""
@@ -2278,7 +2335,7 @@ struct ExpenseDetailsEditView: View {
                     VStack(spacing: 16) {
                         ZStack {
                             HStack(spacing: 4) {
-                                Text("₺")
+                                Text(currencyManager.currentCurrency.symbol)
                                     .font(.system(size: 72, weight: .regular))
                                 TextField("0", text: Binding(
                                     get: { amount },
@@ -2860,6 +2917,8 @@ struct MemoSearchView: View {
     @Binding var isPresented: Bool
     @ObservedObject var expenseManager: ExpenseManager // Add this
     @FocusState private var isFocused: Bool
+    @StateObject private var currencyManager = CurrencyManager.shared
+
     
     private var filteredMemos: [String] {
         // Get unique memos from all expenses
@@ -2955,9 +3014,11 @@ struct MemoSearchView: View {
 // First, add this helper view for the tooltip
 struct AmountTooltip: View {
     let amount: Double
+    @StateObject private var currencyManager = CurrencyManager.shared
+
     
     var body: some View {
-        Text("₺\(amount, specifier: "%.2f")")
+        Text("\(currencyManager.currentCurrency.symbol)\(amount, specifier: "%.2f")")
             .font(.system(size: 12))
             .foregroundColor(.white)
             .lineLimit(1)
