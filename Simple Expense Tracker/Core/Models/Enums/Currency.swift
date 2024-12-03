@@ -1,10 +1,4 @@
-//
-//  Currency.swift
-//  Simple Expense Tracker
-//
-//  Created by Mucahit Bilal GOKER on 1.12.2024.
-//
-import Foundation
+import SwiftUI
 
 enum Currency: String, CaseIterable {
     case usd = "USD"
