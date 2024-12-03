@@ -67,29 +67,54 @@ struct LogView: View {
             return true
         }
         
-        // Group filtered expenses by month
-        let groupedByMonth = Dictionary(grouping: filteredExpenses) { expense in
-            formatter.string(from: expense.date)
-        }
-        
-        return groupedByMonth.map { month, expenses in
-            let groupedByDay = Dictionary(grouping: expenses) { expense in
-                dayFormatter.string(from: expense.date)
+        if filterOptions.groupByDay {
+            // Group filtered expenses by month
+            let groupedByMonth = Dictionary(grouping: filteredExpenses) { expense in
+                formatter.string(from: expense.date)
             }
             
-            let sortedDays = groupedByDay.map { day, dayExpenses in
-                (day, dayExpenses.sorted { $0.date > $1.date }, dayExpenses.reduce(0) { $0 + $1.amount })
-            }.sorted { day1, day2 in
-                let date1 = dayFormatter.date(from: day1.0) ?? Date()
-                let date2 = dayFormatter.date(from: day2.0) ?? Date()
+            return groupedByMonth.map { month, expenses in
+                let groupedByDay = Dictionary(grouping: expenses) { expense in
+                    dayFormatter.string(from: expense.date)
+                }
+                
+                let sortedDays = groupedByDay.map { day, dayExpenses in
+                    let sortedExpenses = dayExpenses.sorted {
+                        switch filterOptions.sortOption {
+                        case .date:
+                            return $0.date > $1.date
+                        case .amount:
+                            return $0.amount > $1.amount
+                        }
+                    }
+                    return (day, sortedExpenses, sortedExpenses.reduce(0) { $0 + $1.amount })
+                }.sorted { day1, day2 in
+                    let date1 = dayFormatter.date(from: day1.0) ?? Date()
+                    let date2 = dayFormatter.date(from: day2.0) ?? Date()
+                    return date1 > date2
+                }
+                
+                return (month, sortedDays)
+            }.sorted { month1, month2 in
+                let date1 = formatter.date(from: month1.0) ?? Date()
+                let date2 = formatter.date(from: month2.0) ?? Date()
                 return date1 > date2
             }
+        } else {
+            // Create a single group for the whole month
+            let sortedExpenses = filteredExpenses.sorted {
+                switch filterOptions.sortOption {
+                case .date:
+                    return $0.date > $1.date
+                case .amount:
+                    return $0.amount > $1.amount
+                }
+            }
             
-            return (month, sortedDays)
-        }.sorted { month1, month2 in
-            let date1 = formatter.date(from: month1.0) ?? Date()
-            let date2 = formatter.date(from: month2.0) ?? Date()
-            return date1 > date2
+            return [(
+                formatter.string(from: selectedDate),
+                [("", sortedExpenses, sortedExpenses.reduce(0) { $0 + $1.amount })]
+            )]
         }
     }
     

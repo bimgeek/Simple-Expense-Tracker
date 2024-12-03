@@ -46,6 +46,9 @@
 "missing_vat" = "Missing VAT";
 "no_receipt" = "No Receipt";
 "clear_filters" = "Clear Filters";
+"sort_by_date" = " Sort by Date";
+"sort_by_amount" = " Sort by Amount";
+"group_by_day" = " Group by Day";
 
 // Export
 "export_expenses" = "Export Expenses as CSV";
@@ -98,3 +101,4 @@
 "eur" = "Euro";
 "gbp" = "Pound Sterling";
 "trl" = "Turkish Lira";
+

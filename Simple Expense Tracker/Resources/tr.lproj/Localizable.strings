@@ -46,6 +46,9 @@
 "missing_vat" = "KDV Eksik";
 "no_receipt" = "Fiş Yok";
 "clear_filters" = "Filtreleri Temizle";
+"sort_by_date" = " Tarihe göre";
+"sort_by_amount" = " Miktara göre";
+"group_by_day" = " Günleri grupla";
 
 // Export
 "export_expenses" = "CSV Olarak Dışa Aktar";
