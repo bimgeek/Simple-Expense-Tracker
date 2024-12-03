@@ -3,7 +3,7 @@ import SwiftUI
 struct FilterBar: View {
     @Binding var filterOptions: FilterOptions
     @Binding var showingMemoSearch: Bool
-    @ObservedObject var expenseManager: ExpenseManager // Add this
+    @ObservedObject var expenseManager: ExpenseManager
     @State private var showingCategoryPicker = false
     
     private var selectedCategoriesText: String {
@@ -19,6 +19,42 @@ struct FilterBar: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+                // Sort Menu
+                Menu {
+                    // Sort options
+                    ForEach(SortOption.allCases, id: \.self) { option in
+                        Button(action: {
+                            filterOptions.sortOption = option
+                        }) {
+                            HStack {
+                                Image(systemName: option.icon)
+                                Text("sort_by_\(option.rawValue.lowercased())".localized)
+                                if filterOptions.sortOption == option {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    // Group by day toggle
+                    Toggle(isOn: $filterOptions.groupByDay) {
+                        HStack {
+                            Image(systemName: "rectangle.grid.1x2")
+                            Text("group_by_day".localized)
+                        }
+                    }
+                } label: {
+                    FilterChip(
+                        icon: filterOptions.sortOption.icon,
+                        label: "",//"sort_by_\(filterOptions.sortOption.rawValue.lowercased())".localized,
+                        isSelected: filterOptions.sortOption != .date || !filterOptions.groupByDay,
+                        showsMenuIndicator: true
+                    )
+                }
+                
                 // Memo search button
                 FilterChip(
                     icon: "magnifyingglass",
