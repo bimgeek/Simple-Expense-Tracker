@@ -160,6 +160,17 @@ struct SettingsView: View {
                         .padding(.horizontal)
                     }
                     
+                    // Version text
+                    HStack {
+                        Spacer()
+                        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "3"))")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                        Spacer()
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.bottom, 60)
+                    
                     Spacer()
                 }
                 .padding(.top)
