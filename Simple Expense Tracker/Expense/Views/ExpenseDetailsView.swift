@@ -110,7 +110,7 @@ struct ExpenseDetailsView: View {
                                 .cornerRadius(10)
                                 .padding(.horizontal)
                                 .focused($isMemoFocused)
-                                .onChange(of: memo) { _, newValue in
+                                .onChange(of: memo) { newValue in
                                     showMemoSuggestions = !newValue.isEmpty
                                 }
                             
@@ -253,7 +253,7 @@ struct ExpenseDetailsView: View {
                     .edgesIgnoringSafeArea(.all)
                 }
             }
-            .onChange(of: shouldDeleteImage) { _, shouldDelete in
+            .onChange(of: shouldDeleteImage) { shouldDelete in
                 if shouldDelete {
                     receiptImage = nil
                 }
