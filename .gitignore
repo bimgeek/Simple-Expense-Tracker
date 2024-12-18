@@ -1,0 +1,9 @@
+# Sensitive files
+Config.swift
+Simple-Expense-Tracker-Info.plist
+*.xcconfig
+
+
+# Example files
+!Config.example.swift
+!Example-Info.plist
