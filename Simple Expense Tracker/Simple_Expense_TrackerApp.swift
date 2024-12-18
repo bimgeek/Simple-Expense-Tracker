@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import GoogleMobileAds
 
 @main
 struct Simple_Expense_TrackerApp: App {
+    init() {
+        // Initialize Google Mobile Ads SDK
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -141,6 +141,7 @@ struct LogView: View {
                     onPrevious: previousMonth,
                     onNext: nextMonth
                 )
+                .padding(.top, 20)
                 
                 // Add FilterBar
                 FilterBar(

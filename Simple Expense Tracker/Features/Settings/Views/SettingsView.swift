@@ -15,6 +15,10 @@ struct SettingsView: View {
         NavigationView {
             ZStack {
                 VStack(spacing: 24) {
+                    // Add some top padding to prevent overlap with navigation title
+                    Spacer()
+                        .frame(height: 30)
+                        
                     // Language settings group
                     VStack(alignment: .leading, spacing: 8) {
                         Text("language".localized)
