@@ -89,7 +89,7 @@ struct InsightsView: View {
                 // Month selector with safe area spacing
                 VStack(spacing: 0) {
                     Color.clear
-                        .frame(height: safeAreaTop)
+                        .frame(height: 20)
                     
                     MonthSelectorView(
                         monthYearString: monthYearString,

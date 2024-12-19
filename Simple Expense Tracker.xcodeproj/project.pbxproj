@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		09313A922D135EED00B78928 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 09313A912D135EED00B78928 /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		093EF9D72CF3C7DC0039CC83 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09313A922D135EED00B78928 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = "Simple Expense Tracker";
 			packageProductDependencies = (
+				09313A912D135EED00B78928 /* GoogleMobileAds */,
 			);
 			productName = "Simple Expense Tracker";
 			productReference = 093EF9C62CF3C7DA0039CC83 /* Simple Expense Tracker.app */;
@@ -196,6 +202,9 @@
 			);
 			mainGroup = 093EF9BD2CF3C7DA0039CC83;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				09313A902D135EED00B78928 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 093EF9C72CF3C7DA0039CC83 /* Products */;
 			projectDirPath = "";
@@ -569,6 +578,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		09313A902D135EED00B78928 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		09313A912D135EED00B78928 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 09313A902D135EED00B78928 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 093EF9BE2CF3C7DA0039CC83 /* Project object */;
 }

@@ -18,25 +18,31 @@ struct ContentView: View {
             Color(red: 0.05, green: 0.05, blue: 0.2)
                 .ignoresSafeArea()
             
-            // Main content based on selected tab
-            Group {
-                switch selectedTab {
-                case .home:
-                    HomeView(expenseManager: expenseManager, selectedTab: $selectedTab)
-                        .transition(.opacity)
-                case .log:
-                    LogView(expenseManager: expenseManager)
-                        .transition(.opacity)
-                case .insights:
-                    InsightsView(expenseManager: expenseManager)
-                        .transition(.opacity)
-                case .settings:
-                    SettingsView(expenseManager: expenseManager)
-                        .preferredColorScheme(.dark)  // Force dark mode
-                        .transition(.opacity)
+            VStack(spacing: 0) {
+                // Banner ad at the top
+                BannerAd()
+                    .frame(height: 50)
+                
+                // Main content based on selected tab
+                Group {
+                    switch selectedTab {
+                    case .home:
+                        HomeView(expenseManager: expenseManager, selectedTab: $selectedTab)
+                            .transition(.opacity)
+                    case .log:
+                        LogView(expenseManager: expenseManager)
+                            .transition(.opacity)
+                    case .insights:
+                        InsightsView(expenseManager: expenseManager)
+                            .transition(.opacity)
+                    case .settings:
+                        SettingsView(expenseManager: expenseManager)
+                            .preferredColorScheme(.dark)  // Force dark mode
+                            .transition(.opacity)
+                    }
                 }
+                .animation(.easeOut(duration: 0.2), value: selectedTab)
             }
-            .animation(.easeOut(duration: 0.2), value: selectedTab)
             
             // Add Button (only show on home tab)
             if selectedTab == .home {
@@ -62,7 +68,7 @@ struct ContentView: View {
             }
             
             // Tab bar at bottom
-            VStack(spacing: 0) {
+            VStack {
                 Spacer()
                 // Tab bar
                 HStack {
